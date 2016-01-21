@@ -19,7 +19,7 @@ namespace FireCryptEx
 		public void Run(string path, int action, string volName, string pw)
 		{
 			Password = pw;
-			VolumePath = path;
+			VolumePath = Path.GetFullPath(path);
 			VolumeLabel = volName;
 			//2 create, 1 unlock, 0 lock
 			switch (action)
@@ -42,9 +42,9 @@ namespace FireCryptEx
 			bool ValidVolume;
 			string VolumeFileLocation = VolumePath;
 			string fnwoext = Path.GetFileNameWithoutExtension(VolumeFileLocation); //filenamewithout extension
-			string volN = Path.GetDirectoryName(VolumeFileLocation)+"\\"+fnwoext+".vault\\"+fnwoext+".FireCrypt";
-			//dont change it before createvolume because it uses the older standard.
-			VolumeFileLocation = volN; //point it to the actual .FireCrypt file.
+            string volN = Path.GetDirectoryName(VolumeFileLocation) + Path.DirectorySeparatorChar + fnwoext + ".vault"+Path.DirectorySeparatorChar + fnwoext + ".FireCrypt";
+            //dont change it before createvolume because it uses the older standard.
+            VolumeFileLocation = volN; //point it to the actual .FireCrypt file.
 			FireCryptVolume fcv  = new FireCryptVolume(VolumeFileLocation);
 			try
 			{
@@ -66,9 +66,9 @@ namespace FireCryptEx
 			bool ValidVolume;
 			string VolumeFileLocation = VolumePath;
 			string fnwoext = Path.GetFileNameWithoutExtension(VolumeFileLocation); //filenamewithout extension
-			string volN = Path.GetDirectoryName(VolumeFileLocation)+"\\"+fnwoext+".vault\\"+fnwoext+".FireCrypt";
-			//dont change it before createvolume because it uses the older standard.
-			VolumeFileLocation = volN; //point it to the actual .FireCrypt file.
+            string volN = Path.GetDirectoryName(VolumeFileLocation) + Path.DirectorySeparatorChar + fnwoext + ".vault" + Path.DirectorySeparatorChar + fnwoext + ".FireCrypt";
+            //dont change it before createvolume because it uses the older standard.
+            VolumeFileLocation = volN; //point it to the actual .FireCrypt file.
 			FireCryptVolume fcv  = new FireCryptVolume(VolumeFileLocation);
 			try
 			{
@@ -82,6 +82,7 @@ namespace FireCryptEx
 				Console.WriteLine("Volume opening was unsuccessful: {0}",e);
 			}
 			fcv.UnlockVolume(Password);
+            Console.WriteLine("Vault unlocked to {0}",fcv.UnlockPath);
 		}
 		void CreateVol()
 		{
@@ -90,8 +91,8 @@ namespace FireCryptEx
 			bool ValidVolume;
 			string VolumeFileLocation = VolumePath;
 			string fnwoext = Path.GetFileNameWithoutExtension(VolumeFileLocation); //filenamewithout extension
-			string volN = Path.GetDirectoryName(VolumeFileLocation)+"\\"+fnwoext+".vault\\"+fnwoext+".FireCrypt";
-			FireCryptVolume.CreateNewVolume(VolumeFileLocation, VolumeLabel, Password, "1.0");
+            string volN = Path.GetDirectoryName(VolumeFileLocation) + Path.DirectorySeparatorChar + fnwoext + ".vault" + Path.DirectorySeparatorChar + fnwoext + ".FireCrypt";
+            FireCryptVolume.CreateNewVolume(VolumeFileLocation, VolumeLabel, Password, "1.0");
 			//dont change it before createvolume because it uses the older standard.
 			VolumeFileLocation = volN; //point it to the actual .FireCrypt file.
 			try

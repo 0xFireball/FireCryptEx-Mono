@@ -25,7 +25,7 @@ namespace FireCryptEx
 		    var p = new OptionSet () {
 		        { "p|path=", "The path to the volume.",
 		          v => path=v },
-		    	{ "k|k=", "The password to the volume.",
+		    	{ "k|password=", "The password to the volume.",
 		          v =>  passw=v},
 		        { "c|create", "Create a volume at the specified path.",
 		          (v) => action=2 },

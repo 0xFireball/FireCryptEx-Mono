@@ -92,7 +92,7 @@ namespace FireCrypt
 		string _unlockPath;
 		
 		
-		private static string UnlockLocation = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\FireCrypt\\";
+		private static string UnlockLocation = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+ Path.DirectorySeparatorChar+"FireCrypt"+Path.DirectorySeparatorChar;
 		
 		public bool Unlocked
 		{
@@ -113,7 +113,7 @@ namespace FireCrypt
 		public static void CreateNewVolume(string location, string label, string password, string version)
 		{
 			string fnwoext = Path.GetFileNameWithoutExtension(location); //filenamewithout extension
-			string volN = Path.GetDirectoryName(location)+"\\"+fnwoext+".vault\\"+fnwoext+".FireCrypt";
+			string volN = Path.GetDirectoryName(location)+Path.DirectorySeparatorChar+fnwoext+".vault"+ Path.DirectorySeparatorChar + fnwoext+".FireCrypt";
 			string vaultL = Path.GetDirectoryName(volN);
 			Directory.CreateDirectory(Path.GetDirectoryName(volN));
 			string vid = Guid.NewGuid().ToString();
@@ -121,7 +121,7 @@ namespace FireCrypt
 			volMeta["UID"] = vid;
 			volMeta["Label"] = label;
 			volMeta["VolumeVersion"]=version;
-			string ed = Path.GetTempPath()+"\\"+Guid.NewGuid();
+			string ed = Path.GetTempPath()+Path.DirectorySeparatorChar+Guid.NewGuid();
 			Directory.CreateDirectory(ed);
 			switch (version)
 			{
@@ -136,7 +136,7 @@ namespace FireCrypt
 					throw new InvalidOperationException("Cannot perform operation on unsupported volume version!");
 			}
 			string metaS = new JavaScriptSerializer().Serialize(volMeta);
-			File.WriteAllText(vaultL+"\\vault.metadata",metaS);
+			File.WriteAllText(vaultL+ Path.DirectorySeparatorChar+"vault.metadata",metaS);
 		}
 		
 		
@@ -218,7 +218,6 @@ namespace FireCrypt
 			File.WriteAllBytes(VolumeLocation, PowerAES.Encrypt(dVolume, key).GetBytes());
             _unlocked = false;
 			_unlockPath = null;
-            DeleteDirectory(unlockName);
         }
 		
 		private void Lock_1_BC(string key)
@@ -267,16 +266,15 @@ namespace FireCrypt
 		private void DoInit()
 		{
 			//Initialize Required Objects
-			
 			//Initialize Volume
 			string fnwoext = Path.GetFileNameWithoutExtension(RawLocation); //filenamewithout extension
 			string volN = RawLocation;
 			if (Path.GetExtension(volN)!=".FireCrypt")
-				volN = Path.GetDirectoryName(RawLocation)+"\\"+fnwoext+".vault\\"+fnwoext+".FireCrypt";
+				volN = Path.GetDirectoryName(RawLocation)+Path.DirectorySeparatorChar+fnwoext+".vault"+ Path.DirectorySeparatorChar + fnwoext+".FireCrypt";
 			VolumeLocation = volN;
 			VaultLocation = Path.GetDirectoryName(volN);
 			_unlocked = Directory.Exists(OpenVaultLocation);
-			_metadata = File.ReadAllText(VaultLocation+"\\vault.metadata");
+			_metadata = File.ReadAllText(VaultLocation+ Path.DirectorySeparatorChar + "vault.metadata");
 			var jss = new JavaScriptSerializer();
 			MetadataValues = jss.Deserialize<Dictionary<string,string>>(_metadata);
 			UID = MetadataValues["UID"];
